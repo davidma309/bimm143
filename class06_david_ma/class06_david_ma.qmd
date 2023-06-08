@@ -1,0 +1,83 @@
+---
+title: "class06_david_ma"
+author: "David Ma"
+format: pdf
+---
+
+## Importing example student vectors
+
+```{r}
+student1 <- c(100, 100, 100, 100, 100, 100, 100, 90)
+student2 <- c(100, NA, 90, 90, 90, 90, 97, 80)
+student3 <- c(90, NA, NA, NA, NA, NA, NA, NA)
+```
+
+## Q1: Creating grade() function
+
+```{r}
+grade <- function(student_grade) {
+  # Replacing NA's with 0's
+  student_grade[is.na(student_grade)] <- 0
+  
+  # Finding the index of the lowest grade
+  lowest_index <- which.min(student_grade)
+  
+  # Dropping the lowest grade by removing this index
+  student_grade <- student_grade[-lowest_index]
+  
+  # Taking the average of the updated student homework
+  student_average <- mean(student_grade)
+  
+  # Give back the average
+  return(student_average)
+}
+
+# Testing function on example students
+grade(student1)
+grade(student2)
+grade(student3)
+```
+
+## Q2: Top scoring student
+
+```{r}
+# Reading in the supplied gradebook
+url <- "https://tinyurl.com/gradeinput"
+all_student_grade <- read.csv(url, row.names = 1)
+
+# Applying my grade function to the gradebook and assigning it to an object
+student_scores <- apply(all_student_grade, 1, grade)
+
+# Obtaining the index of the maximum grade
+high_index <- which.max(student_scores)
+
+# Give the highest scoring student
+student_scores[high_index]
+
+```
+
+## Q3: Toughest homework assignment
+
+```{r}
+# Replace NAs with 0's
+all_student_grade_zeroes <- replace(all_student_grade, is.na(all_student_grade), 0)
+
+# Calculate averages of each homework assignment
+hw_averages <- colMeans(all_student_grade_zeroes)
+
+# Give back the lowest scoring homework assignment through indexing
+smallest_index <- which.min(hw_averages)
+colnames(all_student_grade)[smallest_index]
+```
+
+## Q4: Homework Correlation
+
+```{r}
+# Using student_scores from Q2 to determine correlation
+correlations <- apply(all_student_grade_zeroes, 2, cor, y = student_scores)
+
+# What's my max?
+cor_index <- which.max(correlations)
+correlations[cor_index]
+```
+
