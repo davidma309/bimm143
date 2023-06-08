@@ -1,0 +1,101 @@
+---
+title: "class09_david_ma"
+format: pdf
+author: "David Ma"
+---
+
+# Section 1: Intro to RPDB
+
+> Q1: What percentage of structures in the PDB are solved by X-ray and electron microscopy?
+
+```{r}
+db <- read.csv("Data_Export_Summary.csv", row.names = 1)
+
+numerics <- function(x){
+  
+  #Takes the sum after removing commas and converting strings into integers
+  sum(as.numeric(gsub(",","", x)))
+}
+
+```
+
+For Xray:
+```{r}
+numerics(db$X.ray) / numerics(db$Total)
+```
+
+For EM:
+```{r}
+numerics(db$EM) / numerics(db$Total)
+```
+
+> Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+numerics(db[1, "Total"]) / numerics(db$Total)
+```
+
+# Section 2: Visualizing HIV-1
+
+> Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+![HIV-PR structure from MERK with a bound drug](1HSG.png)
+
+> Q4: Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
+
+The structure is too low a resolution to see H atoms. You need a sub 1 Angstrom resolution to see Hydrogen.
+
+> Q5: There is a critical “conserved” water molecule in the binding site. Can you identify this water molecule? What residue number does this water molecule have?
+
+HOH 308
+
+# Section 3: Working with Structures in R
+
+We can use the `bio3d` package to read and perform bioinformatics calculations on PDB structures.
+
+```{r}
+library(bio3d)
+
+pdb <- read.pdb("1hsg")
+pdb
+```
+
+> Q7: How many amino acid residues are in this PDB object?
+
+198
+
+> Q8: Name one of the two-non protein residues?
+
+MK1
+
+> Q9: How many protein chains are in this structure?
+
+2
+
+```{r}
+attributes(pdb)
+```
+
+```{r}
+head(pdb$atom)
+```
+
+Read an ADK structure 
+
+```{r}
+adk <- read.pdb("6s36")
+adk
+```
+
+Perform a prediction of flexibility with a technique called NMA (normal mode analysis)
+```{r}
+# Perform flexiblity prediction
+m <- nma(adk)
+plot(m)
+```
+
+Write out a "movie" (a.k.a trajectory) of the motion for viewing in M0lstar.
+
+```{r}
+mktrj(m, file="adk_m7.pdb")
+```

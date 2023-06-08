@@ -1,0 +1,163 @@
+---
+title: "class7_clustering_and_pca"
+author: "David Ma"
+format: pdf
+---
+
+# Clustering
+
+We can use `rnorm()` function to get random numbers around a normal distribution around a given `mean`.
+
+```{r}
+# Creating a normal distribution
+rnorm(15)
+
+# Creating histograms of a normal distribution around a given mean
+hist( rnorm(500, mean = 3))
+```
+
+For 30 points with a mean of 3 and -3:
+
+```{r}
+c(rnorm(30, mean = 3), rnorm(30, mean = -3))
+```
+
+Those same points, but putting them together:
+
+```{r}
+data <- c(rnorm(30, mean = 3), rnorm(30, mean = -3))
+combined_data <- cbind(x = data, y = rev(data))
+
+# What does it look like?
+plot(combined_data)
+```
+## K-means clustering
+
+Popular clustering method (especially for big datasets) that we can use with `kmeans()` function in base R.
+
+```{r}
+km <- kmeans(combined_data, centers = 2)
+km
+```
+
+# kmeans() practice
+
+```{r}
+
+# What is the size?
+km$size
+
+# What is the cluster/assignment?
+km$cluster
+
+# What is the cluster center?
+km$centers
+```
+
+```{r}
+# Plot x colored by the kmeans cluster assignment and add cluster centers as blue points
+plot(combined_data, col = km$cluster)
+points(km$centers, col = "blue", pch = 15, cex = 2)
+```
+
+> Q. Clustering into 3 groups on same `combined_data` and make a plot:
+
+```{r}
+km3 <- kmeans(combined_data, centers = 3)
+plot(combined_data, col = km3$cluster)
+points(km3$centers, col = "blue", pch = 9, cex = 2)
+```
+
+# Hierarchical Clustering
+
+We can use `hclust()` for hierarchical clustering. Unlike `kmeans()` where we could just pass in our data as input, we need to give `hclust()` a "distance matrix".
+
+We will use the `dist()` function to start with.
+
+```{r}
+d <- dist(combined_data)
+hc <- hclust(d)
+hc
+```
+
+```{r}
+plot(hc)
+```
+
+I can now "cut" my tree with the `cutree()` to yield a cluster membership vector. 
+
+```{r}
+grps <- cutree(hc, h = 8)
+```
+
+You can also tell `cutree()` to cut where it yields "k" groups.
+
+```{r}
+cutree(hc, k = 2)
+```
+
+Plotting these points with color:
+
+```{r}
+plot(combined_data, col = grps)
+```
+
+# Principal Componenet Analysis (PCA)
+
+```{r}
+# Importing UK food data
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url)
+
+# Q1. How many rows and columns are there in this dataframe?
+dim(x)
+```
+
+```{r}
+# Checking our data, noticing how the row names are incorrectly set as the first column
+head(x)
+```
+
+```{r}
+# Q2. Let's fix this by setting the first column. Note that this method is preferred, as it is less destructive than removing the first column, as rerunning this would begin to delete all your columns!
+x <- read.csv(url, row.names=1)
+head(x)
+```
+
+```{r}
+# Beginning to visualize the data
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+```{r}
+# Q3. Leaving out the `beside` argument will generate the desired plot, as it is FALSE by default 
+barplot(as.matrix(x), col=rainbow(nrow(x)))
+
+```
+
+```{r}
+# Q5. Generating pairwise plots. From the top left box going horizontal, England is the Y axis. Downwards, England is the X axis. Each dot is a food category. If the values from each pair is the same, they would lie on a straight diagonal line.
+pairs(x, col=rainbow(10), pch=16)
+
+```
+
+> Q6. Looking at N. Ireland, their cyan, blue, and orange dots tend to not be on the diagonal compared to other pairings. 
+
+```{r}
+# Making sense with PCA
+pca <- prcomp( t(x) )
+summary(pca)
+```
+
+```{r}
+# Q7. PC1 vs PC2 visualization
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+```
+
+```{r}
+# Coloring them in
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x), col = c("orange", "red", "blue", "green"))
+```
+
