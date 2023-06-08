@@ -7,7 +7,7 @@ From class [BIMM 143](https://bioboot.github.io/bimm143_S23/)
 
 - Class 06: [**R Functions**](https://github.com/davidma309/bimm143/blob/main/class06_david_ma/class06_david_ma.pdf) [source code](https://github.com/davidma309/bimm143/blob/main/class06_david_ma/class06_david_ma.qmd)
 
-- Class 07: [**Introduction to machine learning for Bioinformatics**](https://github.com/davidma309/bimm143/blob/main/class07_david_ma/class_07_david_ma.pdf)[source code](https://github.com/davidma309/bimm143/blob/main/class07_david_ma/class_07_david_ma.qmd)
+- Class 07: [**Introduction to machine learning for Bioinformatics**](https://github.com/davidma309/bimm143/blob/main/class07_david_ma/class_07_david_ma.pdf) [source code](https://github.com/davidma309/bimm143/blob/main/class07_david_ma/class_07_david_ma.qmd)
 
 - Class 08: [**Unsupervised learning analysis**](https://github.com/davidma309/bimm143/blob/main/class08_david_ma/class08_david_ma_ML.pdf) [source code](https://github.com/davidma309/bimm143/blob/main/class08_david_ma/class08_david_ma_ML.qmd)
 
